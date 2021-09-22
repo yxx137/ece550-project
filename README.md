@@ -88,4 +88,13 @@ Opcode bit:
         S4                      S3                      S2                   S1                     S0
     shift by 0/16           shift by 0/8            shift by 0/4         shift by 0/2           shift by 0/1
 
+#isNotEqual_32bit
+I used 32 xor gates to compare data_operandA, data_operandB and get a compare_result. 
+we use loop to manipulate 32 bit compare_result by or gates one bit by one bit.
 
+#isLessThan_32bit
+We compared the most significant bit of the value after subtracting data_operandA and data_operandB with overflow.
+the most significant bit            overflow         isLessThan
+0                                   1                 1
+1                                   0                 1
+			
