@@ -1,0 +1,14 @@
+module SLL_31bit(B, shift, out);
+	input[31:0] B;
+	input[4:0] shift;
+	ouput[31:0] out;
+	
+	
+SLL_1bit sll1(B[31:0], shift[0], out[31:0]);
+SLL_1bit sll2(B[31:0], shift[1], out[31:0]);
+SLL_1bit sll3(B[31:0], shift[2], out[31:0]);
+SLL_1bit sll4(B[31:0], shift[3], out[31:0]);
+SLL_1bit sll5(B[31:0], shift[4], out[31:0]);
+
+	
+endmodule

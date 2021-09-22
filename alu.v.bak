@@ -1,0 +1,85 @@
+module alu(data_operandA, data_operandB, ctrl_ALUopcode, ctrl_shiftamt, data_result, isNotEqual, isLessThan, overflow);
+
+   input [31:0] data_operandA, data_operandB;
+   input [4:0] ctrl_ALUopcode, ctrl_shiftamt;
+
+   output [31:0] data_result;
+   output isNotEqual, isLessThan, overflow;
+	wire[31:0] sub_result, add_result;
+	wire overflowS, overflowA;
+	
+	sub_32bit sub1(data_operandA, data_operandB, sub_result);
+	ovfSub ov(data_operandA, data_operandB, sub_result, overflowS);
+	
+	Adder_32bit adder1(data_operandA, data_operandB, 0, add_result);
+	ovf ov1(data_operandA, data_operandB, add_result, overflowA);
+	
+	AND_32bit and32bit(data_operandA, data_operandB, and_32bit_result);
+	
+	OR_32bit or32bit(data_operandA, data_operandB, or_32_bit_result);
+	
+	SLL_31bit sll31bit(data_operandA, ctrl_shiftamt, sll_shift_result);
+	
+	SRA sra31bit(data_operandA, ctrl_shiftamt, sra_shift_result);
+
+//   assign data_result = (ctrl_ALUopcode[0] ==1) ? sub_result : add_result;// YOUR CODE HERE //
+//	assign overflow = (ctrl_ALUopcode[0] ==1) ? overflowS : overflowA;
+//	
+	
+	wire[2:0] ALUopcode_3;
+	wire[7:0] decodedWire;
+	
+	decoder3_8 decoder3_8_1(ALUopcode_3, decodedWire);
+	
+	if (decodedWire[0] == 1) {
+		data_result = and_32bit_result;
+	}
+	if (decodedWire[1] == 1) {
+		data_result = and_32bit_result;
+	}
+	if (decodedWire[2] == 1) {
+		data_result = and_32bit_result;
+	}
+	
+	mux
+	
+	if (ctrl_ALUopcode[0] == 1) begin
+		data_result = sub_result;
+		overflow = overflowS；
+	end else begin 
+		data_result = add_result;
+		overflow = overflowA；
+	end
+	
+	assign checka = ctrl_ALUopcode[1] == 1;
+	assign checkb = ctrl_ALUopcode[0] == 0;
+	and and1(checkOut, checka, checkb);
+	if (checkOut) {
+		data_result = and_32bit_result;
+	}
+	
+	assign checka = ctrl_ALUopcode[1] == 1;
+	assign checkb = ctrl_ALUopcode[0] == 1;
+	and and1(checkOut, checka, checkb);
+	if (checkOut) {
+		data_result = or_32_bit_result;
+	}
+	
+	assign checka = ctrl_ALUopcode[2] == 1;
+	assign checkb = ctrl_ALUopcode[1] == 0;
+	assign checkc = ctrl_ALUopcode[0] == 0;
+	and and1(checkOut, checka, checkb, checkc);
+	if (checkOut) {
+		data_result = sll_shift_result;
+	}
+	
+	assign checka = ctrl_ALUopcode[2] == 1;
+	assign checkb = ctrl_ALUopcode[1] == 0;
+	assign checkc = ctrl_ALUopcode[0] == 1;
+	and and1(checkOut, checka, checkb, checkc);
+	if (checkOut) {
+		data_result = sra_shift_result;
+	}
+	
+	
+endmodule
